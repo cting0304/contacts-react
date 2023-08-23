@@ -1,9 +1,39 @@
-import React from 'react';
-import '../App.css';
+import React, { useState } from 'react';
+import { connect } from 'react-redux';
+import { addContact } from '../redux/contactActions';
 
-function ContactForm() {
+function ContactForm({ addContact }) {
+  const [contact, setContact] = useState({
+    firstName: '',
+    middleName: '',
+    lastName: '',
+    mobileNumber: '',
+    emailAddress: '',
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setContact((prevContact) => ({
+      ...prevContact,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    addContact(contact);
+    // Clear the form after adding the contact
+    setContact({
+      firstName: '',
+      middleName: '',
+      lastName: '',
+      mobileNumber: '',
+      emailAddress: '',
+    });
+  };
+
   return (
-    <form>
+    <form onSubmit={handleSubmit}>
       <div>
         <input
           type="text"
@@ -47,6 +77,10 @@ function ContactForm() {
       <button type="submit">Add Contact</button>
     </form>
   );
+}
+
+const mapDispatchToProps = {
+  addContact,
 };
 
-export default ContactForm;
+export default connect(null, mapDispatchToProps)(ContactForm);
